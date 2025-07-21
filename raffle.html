@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Raffles UK - Win Amazing Prizes!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700&family=Kanit:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --claret: #7f1734;
+            --claret-light: #9a1f3d;
+            --blue: #0055a5;
+            --blue-light: #0077cc;
+            --accent: #ffd700;
+            --dark-bg: #0f0f1a;
+            --darker-bg: #080811;
+            --card-bg: #1a1a2e;
+            --text-light: #f0f0f0;
+            --text-muted: #b0b0b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oxanium', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: linear-gradient(
+                90deg,
+                rgb(255, 69, 121),
+                rgb(45, 148, 244)
+            );
+            background-blend-mode: overlay;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 15, 26, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(127, 23, 52, 0.3);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .crown {
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--accent), #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1.1rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-light);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .back-button {
+            background: rgba(0, 85, 165, 0.2);
+            color: var(--blue);
+            padding: 0.8rem 1.5rem;
+            border: 1px solid var(--blue);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            background: var(--blue);
+            color: white;
+            transform: translateX(-3px);
+        }
+
+        /* Main Content */
+        .main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .raffle-detail {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .raffle-main {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+            position: relative;
+        }
+
+        .raffle-main::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--claret), var(--blue));
+        }
+
+        .raffle-image-container {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .raffle-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .raffle-image:hover {
+            transform: scale(1.05);
+        }
+
+        .raffle-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(90deg, var(--claret), var(--blue));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .raffle-content {
+            padding: 2rem;
+        }
+
+        .raffle-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .raffle-price {
+            font-size: 1.5rem;
+            color: var(--blue);
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .raffle-price::before {
+            content: '£';
+        }
+
+        .raffle-description {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .raffle-features {
+            margin-bottom: 2rem;
+        }
+
+        .raffle-features h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .feature-item {
+            background: var(--darker-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: var(--claret);
+            background: rgba(127, 23, 52, 0.1);
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            background: var(--claret);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        /* Sidebar */
+        .raffle-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+            position: relative;
+        }
+
+        .sidebar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--claret), var(--blue));
+            border-radius: 15px 15px 0 0;
+        }
+
+        .countdown-timer {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .countdown-timer h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .timer-display {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .timer-unit {
+            background: var(--darker-bg);
+            padding: 1rem 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+        }
+
+        .timer-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--blue);
+            display: block;
+        }
+
+        .timer-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-section h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .progress-bar {
+            background: var(--darker-bg);
+            height: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--claret), var(--blue));
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { box-shadow: inset 0 0 0 rgba(255, 255, 255, 0.2); }
+            50% { box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2); }
+            100% { box-shadow: inset 0 0 0 rgba(255, 255, 255, 0.2); }
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .ticket-purchase {
+            text-align: center;
+        }
+
+        .ticket-purchase h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .ticket-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ticket-btn {
+            width: 45px;
+            height: 45px;
+            border: 2px solid var(--claret);
+            background: var(--darker-bg);
+            color: var(--claret);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ticket-btn:hover {
+            background: var(--claret);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .ticket-input {
+            width: 80px;
+            padding: 0.8rem;
+            border: 2px solid rgba(127, 23, 52, 0.3);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: var(--darker-bg);
+            color: var(--text-light);
+        }
+
+        .ticket-input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 15px rgba(0, 85, 165, 0.3);
+        }
+
+        .total-cost {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .purchase-button {
+            width: 100%;
+            background: linear-gradient(90deg, var(--claret), var(--blue));
+            color: white;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Kanit', sans-serif;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .purchase-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(127, 23, 52, 0.5);
+        }
+
+        .free-entry {
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .free-entry a {
+            color: var(--blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .free-entry a:hover {
+            color: var(--claret);
+            text-decoration: underline;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            background: var(--darker-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--blue);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .recent-winners {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .recent-winners::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--claret), var(--blue));
+            border-radius: 15px 15px 0 0;
+        }
+
+        .recent-winners h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .winner-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--darker-bg);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+        }
+
+        .winner-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--claret), var(--blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .winner-info {
+            flex: 1;
+        }
+
+        .winner-name {
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.2rem;
+        }
+
+        .winner-prize {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .winner-date {
+            color: var(--blue);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .raffle-detail {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .raffle-sidebar {
+                order: -1;
+            }
+            
+            .timer-display {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem;
+            }
+            
+            .raffle-title {
+                font-size: 2rem;
+            }
+            
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .timer-display {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.3rem;
+            }
+            
+            .timer-unit {
+                padding: 0.8rem 0.3rem;
+            }
+            
+            .timer-number {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <span class="crown">👑</span>
+                Royal Raffles UK
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#raffles">Raffles</a></li>
+                <li><a href="#winners">Winners</a></li>
+                <li>
+                <a class="cta-button">Login</a>
+            </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <a href="#raffles" class="back-button">
+                ← Back to All Raffles
+            </a>
+
+            <div class="raffle-detail">
+                <div class="raffle-main">
+                    <div class="raffle-image-container">
+                        <img src="bmwm3.png" alt="BMW M4 Competition" class="raffle-image">
+                        <div class="raffle-badge">Premium Prize</div>
+                    </div>
+                    
+                    <div class="raffle-content">
+                        <h1 class="raffle-title">BMW M3 Competition 2024</h1>
+                        <div class="raffle-price">4.99 per ticket</div>
+                        
+                        <div class="raffle-description">
+                            <p>Win this stunning BMW M3 Competition 2024 in Alpine White with M Carbon exterior package. This incredible machine features a 3.0L twin-turbo inline-6 engine producing 503 horsepower, capable of 0-60 mph in just 3.8 seconds.</p>
+                            <p>The car comes with a full manufacturer warranty, comprehensive insurance for the first year, and all registration fees paid. This is your chance to own one of the most coveted sports cars on the market today.</p>
+                        </div>
+
+                        <div class="raffle-features">
+                            <h3>Key Features</h3>
+                            <div class="features-list">
+                                <div class="feature-item">
+                                    <span class="feature-icon">🚗</span>
+                                    <span>3.0L Twin-Turbo Engine</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">⚡</span>
+                                    <span>503 HP & 479 lb-ft Torque</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">🏎️</span>
+                                    <span>0-60 mph in 3.8 seconds</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">🎨</span>
+                                    <span>M Carbon Exterior Package</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">🛡️</span>
+                                    <span>Full Manufacturer Warranty</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">📄</span>
+                                    <span>All Fees & Registration Paid</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number">85,432</span>
+                                <span class="stat-label">Total Tickets</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">67,891</span>
+                                <span class="stat-label">Tickets Sold</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">2,847</span>
+                                <span class="stat-label">Participants</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="raffle-sidebar">
+                    <div class="sidebar-card countdown-timer">
+                        <h3>🕐 Time Remaining</h3>
+                        <div class="timer-display">
+                            <div class="timer-unit">
+                                <span class="timer-number" id="days">12</span>
+                                <span class="timer-label">Days</span>
+                            </div>
+                            <div class="timer-unit">
+                                <span class="timer-number" id="hours">18</span>
+                                <span class="timer-label">Hours</span>
+                            </div>
+                            <div class="timer-unit">
+                                <span class="timer-number" id="minutes">35</span>
+                                <span class="timer-label">Minutes</span>
+                            </div>
+                            <div class="timer-unit">
+                                <span class="timer-number" id="seconds">42</span>
+                                <span class="timer-label">Seconds</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-card progress-section">
+                        <h3>📊 Draw Progress</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 79.5%"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <span>67,891 sold</span>
+                            <span>79.5%</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-card ticket-purchase">
+                        <h3>🎫 Purchase Tickets</h3>
+                        <div class="ticket-selector">
+                            <button class="ticket-btn" onclick="decreaseTickets()">-</button>
+                            <input type="number" class="ticket-input" id="ticketQuantity" value="1" min="1" max="100">
+                            <button class="ticket-btn" onclick="increaseTickets()">+</button>
+                        </div>
+                        <div class="total-cost" id="totalCost">£4.99</div>
+                        <button class="purchase-button" onclick="purchaseTickets()">
+                            Enter Raffle Now
+                        </button>
+                        <div class="free-entry">
+                            <a href="#free-entry">Free Entry Available</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-winners">
+                <h3>🏆 Recent Winners</h3>
+                <div class="winner-item">
+                    <div class="winner-avatar">JD</div>
+                    <div class="winner-info">
+                        <div class="winner-name">James D.</div>
+                        <div class="winner-prize">Won Mercedes-Benz C63 AMG</div>
+                    </div>
+                    <div class="winner-date">2 days ago</div>
+                </div>
+                <div class="winner-item">
+                    <div class="winner-avatar">SK</div>
+                    <div class="winner-info">
+                        <div class="winner-name">Sarah K.</div>
+                        <div class="winner-prize">Won iPhone 15 Pro Max</div>
+                    </div>
+                    <div class="winner-date">1 week ago</div>
+                </div>
+                <div class="winner-item">
+                    <div class="winner-avatar">MT</div>
+                    <div class="winner-info">
+                        <div class="winner-name">Michael T.</div>
+                        <div class="winner-prize">Won £50,000 Cash Prize</div>
+                    </div>
+                    <div class="winner-date">2 weeks ago</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const days = document.getElementById('days');
+            const hours = document.getElementById('hours');
+            const minutes = document.getElementById('minutes');
+            const seconds = document.getElementById('seconds');
+            
+            // Get current values
+            let d = parseInt(days.textContent);
+            let h = parseInt(hours.textContent);
+            let m = parseInt(minutes.textContent);
+            let s = parseInt(seconds.textContent);
+            
+            // Decrease by 1 second
+            s--;
+            
+            if (s < 0) {
+                s = 59;
+                m--;
+                if (m < 0) {
+                    m = 59;
+                    h--;
+                    if (h < 0) {
+                        h = 23;
+                        d--;
+                        if (d < 0) {
+                            // Timer expired
+                            clearInterval(countdownInterval);
+                            return;
+                        }
+                    }
+                }
+            }
+            
+            // Update display
+            days.textContent = d.toString().padStart(2, '0');
+            hours.textContent = h.toString().padStart(2, '0');
+            minutes.textContent = m.toString().padStart(2, '0');
+            seconds.textContent = s.toString().padStart(2, '0');
+        }
+        
+        // Start countdown
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        
+        // Ticket quantity functions
+        function increaseTickets() {
+            const input = document.getElementById('ticketQuantity');
+            const currentValue = parseInt(input.value);
+            if (currentValue < 100) {
+                input.value = currentValue + 1;
+                updateTotalCost();
+            }
+        }
+        
+        function decreaseTickets() {
+            const input = document.getElementById('ticketQuantity');
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+                updateTotalCost();
+            }
+        }
+        
+        function updateTotalCost() {
+            const quantity = parseInt(document.getElementById('ticketQuantity').value);
+            const pricePerTicket = 4.99;
+            const total = (quantity * pricePerTicket).toFixed(2);
+            document.getElementById('totalCost').textContent = `£${total}`;
+        }
+        
+        // Purchase tickets
+        function purchaseTickets() {
+            const quantity = document.getElementById('ticketQuantity').value;
+            const total = document.getElementById('totalCost').textContent;
+            
+            alert(`Proceeding to checkout for ${quantity} tickets (${total})`);
+            // Here you would integrate with your payment system
+        }
+        
+        // Update total cost when quantity changes
+        document.getElementById('ticketQuantity').addEventListener('input', updateTotalCost);
+        
+        // Add smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

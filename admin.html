@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Raffles UK - Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700&family=Kanit:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --claret: #7f1734;
+            --claret-light: #9a1f3d;
+            --blue: #0055a5;
+            --blue-light: #0077cc;
+            --accent: #ffd700;
+            --dark-bg: #0f0f1a;
+            --darker-bg: #080811;
+            --card-bg: #1a1a2e;
+            --text-light: #f0f0f0;
+            --text-muted: #b0b0b0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oxanium', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            background-image: linear-gradient(
+                90deg,
+                rgba(127, 23, 52, 0.1),
+                rgba(0, 85, 165, 0.1)
+            );
+        }
+
+        .dashboard-container {
+            display: grid;
+           
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--card-bg);
+            border-right: 1px solid rgba(127, 23, 52, 0.2);
+            padding: 2rem 0;
+            position: fixed;
+            width: 250px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(127, 23, 52, 0.2);
+            padding-bottom: 1.5rem;
+        }
+
+        .logo {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .crown {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        .admin-badge {
+            background: var(--claret);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            color: var(--text-light);
+            background: rgba(127, 23, 52, 0.1);
+            border-right: 3px solid var(--claret);
+        }
+
+        .sidebar-nav .icon {
+            width: 20px;
+            height: 20px;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(127, 23, 52, 0.2);
+        }
+
+        .page-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--claret), var(--blue));
+       
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--claret), var(--blue));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(127, 23, 52, 0.2);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon.primary {
+            background: rgba(127, 23, 52, 0.2);
+            color: var(--claret);
+        }
+
+        .stat-icon.success {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+        }
+
+        .stat-icon.info {
+            background: rgba(23, 162, 184, 0.2);
+            color: var(--info);
+        }
+
+        .stat-icon.warning {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--claret), var(--blue));
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--darker-bg);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--darker-bg);
+            color: var(--text-light);
+            border: 1px solid rgba(127, 23, 52, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            background: var(--darker-bg);
+            border-radius: 8px;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(127, 23, 52, 0.1);
+        }
+
+        .table th {
+            background: var(--card-bg);
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(127, 23, 52, 0.05);
+        }
+
+        .table img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(127, 23, 52, 0.2);
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.active {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+        }
+
+        .status-badge.pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning);
+        }
+
+        .status-badge.ended {
+            background: rgba(220, 53, 69, 0.2);
+            color: var(--danger);
+        }
+
+        .status-badge.draft {
+            background: rgba(108, 117, 125, 0.2);
+            color: var(--text-muted);
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(127, 23, 52, 0.3);
+            border-radius: 8px;
+            background: var(--darker-bg);
+            color: var(--text-light);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 10px rgba(0, 85, 165, 0.2);
+        }
+
+        .form-control[type="file"] {
+            padding: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(127, 23, 52, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(127, 23, 52, 0.2);
+        }
+
+        .modal-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-action {
+            background: var(--card-bg);
+            border: 1px solid rgba(127, 23, 52, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+
+        .quick-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(127, 23, 52, 0.2);
+            border-color: var(--claret);
+        }
+
+        .quick-action-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--claret);
+        }
+
+        .quick-action-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-action-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Filters */
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.6rem 1rem;
+            border: 1px solid rgba(127, 23, 52, 0.3);
+            border-radius: 8px;
+            background: var(--darker-bg);
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.6rem 1rem;
+            border: 1px solid rgba(127, 23, 52, 0.3);
+            border-radius: 8px;
+            background: var(--darker-bg);
+            color: var(--text-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="crown">👑</span>
+                    Royal Raffles
+                    <span class="admin-badge">ADMIN</span>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#" class="nav-link active" data-section="dashboard">
+                    <span class="icon">📊</span>
+                    Dashboard
+                </a></li>
+                <li><a href="#" class="nav-link" data-section="raffles">
+                    <span class="icon">🎲</span>
+                    Manage Raffles
+                </a></li>
+                <li><a href="#" class="nav-link" data-section="users">
+                    <span class="icon">👥</span>
+                    Users
+                </a></li>
+                <li><a href="#" class="nav-link" data-section="transactions">
+                    <span class="icon">💰</span>
+                    Transactions
+                </a></li>
+                <li><a href="#" class="nav-link" data-section="winners">
+                    <span class="icon">🏆</span>
+                    Winners
+                </a></li>
+                <li><a href="#" class="nav-link" data-section="analytics">
+                    <span class="icon">📈</span>
+                    Analytics
+                </a></li>
+                <li><a href="#" class="nav-link" data-section="settings">
+                    <span class="icon">⚙️</span>
+                    Settings
+                </a></li>
+                <li><a href="#" class="nav-link" data-section="support">
+                    <span class="icon">🎧</span>
+                    Support
+                </a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="content-section active">
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Welcome back, Admin! Here's your platform overview.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">🎲</div>
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Active Raffles</div>
+                        <div class="stat-change positive">↗ +3 from last week</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon success">👥</div>
+                        <div class="stat-value">1,847</div>
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-change positive">↗ +127 this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon info">💰</div>
+                        <div class="stat-value">£45,280</div>
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-change positive">↗ +12% from last month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning">🏆</div>
+                        <div class="stat-value">156</div>
+                        <div class="stat-label">Winners This Month</div>
+                        <div class="stat-change positive">↗ +8 from last month</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Quick Actions</h2>
+                    </div>
+                    <div class="quick-actions">
+                        <a href="#" class="quick-action" onclick="showSection('raffles')">
+                            <div class="quick-action-icon">➕</div>
+                            <div class="quick-action-title">Create Raffle</div>
+                            <div class="quick-action-desc">Add a new raffle to the platform</div>
+                        </a>
+                        <a href="#" class="quick-action" onclick="showSection('users')">
+                            <div class="quick-action-icon">👤</div>
+                            <div class="quick-action-title">User Management</div>
+                            <div class="quick-action-desc">Manage user accounts</div>
+                        </a>
+                        <a href="#" class="quick-action" onclick="showSection('winners')">
+                            <div class="quick-action-icon">🎯</div>
+                            <div class="quick-action-title">Draw Winners</div>
+                            <div class="quick-action-desc">Conduct raffle draws</div>
+                        </a>
+                        <a href="#" class="quick-action" onclick="showSection('analytics')">
+                            <div class="quick-action-icon">📊</div>
+                            <div class="quick-action-title">View Reports</div>
+                            <div class="quick-action-desc">Check platform analytics</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Activity</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Action</th>
+                                    <th>User</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2 min ago</td>
+                                    <td>New Entry</td>
+                                    <td>john.doe@email.com</td>
+                                    <td>iPhone 15 Pro Raffle - 5 tickets</td>
+                                </tr>
+                                <tr>
+                                    <td>15 min ago</td>
+                                    <td>Raffle Created</td>
+                                    <td>admin</td>
+                                    <td>MacBook Pro M3 Raffle</td>
+                                </tr>
+                                <tr>
+                                    <td>1 hour ago</td>
+                                    <td>Winner Drawn</td>
+                                    <td>system</td>
+                                    <td>Tesla Model 3 Raffle</td>
+                                </tr>
+                                <tr>
+                                    <td>2 hours ago</td>
+                                    <td>User Registered</td>
+                                    <td>jane.smith@email.com</td>
+                                    <td>New user account created</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Raffles Management Section -->
+            <div id="raffles" class="content-section">
+                <div class="page-header">
+                    <h1 class="page-title">Manage Raffles</h1>
+                    <p class="page-subtitle">Create, edit, and manage all raffles on the platform.</p>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">All Raffles</h2>
+                        <button class="btn btn-primary" onclick="showModal('createRaffleModal')">
+                            ➕ Create New Raffle
+                        </button>
+                    </div>
+
+                    <div class="filter-bar">
+                        <select class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="pending">Pending</option>
+                            <option value="ended">Ended</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="cars">Cars</option>
+                            <option value="fashion">Fashion</option>
+                        </select>
+                        <input type="text" class="search-input" placeholder="Search raffles...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Entries</th>
+                                    <th>Status</th>
+                                    <th>End Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://via.placeholder.com/60x60/7f1734/ffffff?text=📱" alt="iPhone"></td>
+                                    <td>iPhone 15 Pro Max</td>
+                                    <td>Electronics</td>
+                                    <td>£2.99</td>
+                                    <td>1,234</td>
+                                    <td><span class="status-badge active">Active</span></td>
+                                    <td>2025-07-15</td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="editRaffle(1)">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteRaffle(1)">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://via.placeholder.com/60x60/0055a5/ffffff?text=🚗" alt="Tesla"></td>
+                                    <td>Tesla Model 3</td>
+                                    <td>Cars</td>
+                                    <td>£4.99</td>
+                                    <td>2,567</td>
+                                    <td><span class="status-badge ended">Ended</span></td>
+                                    <td>2025-07-01</td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewWinner(2)">View Winner</button>
+                                        <button class="btn btn-warning" onclick="drawWinner(2)">Draw</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://via.placeholder.com/60x60/ffd700/000000?text=👜" alt="Bag"></td>
+                                    <td>Designer Handbag</td>
+                                    <td>Fashion</td>
+                                    <td>£1.99</td>
+                                    <td>456</td>
+                                    <td><span class="status-badge pending">Pending</span></td>
+                                    <td>2025-07-20</td>
+                                    <td>
+                                        <button class="btn btn-success" onclick="approveRaffle(3)">Approve</button>
+                                        <button class="btn btn-secondary" onclick="editRaffle(3)">Edit</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Management Section -->
+            <div id="users" class="content-section">
+                <div class="page-header">
+                    <h1 class="page-title">User Management</h1>
+                    <p class="page-subtitle">Manage user accounts and their activities.</p>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">All Users</h2>
+                        <button class="btn btn-primary" onclick="exportUsers()">
+                            📥 Export Users
+                        </button>
+                    </div>
+
+                    <div class="filter-bar">
+                        <select class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="banned">Banned</option>
+                        </select>
+                        <input type="text" class="search-input" placeholder="Search users...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Email</th>
+                                    <th>Name</th>
+                                    <th>Joined</th>
+                                    <th>Total Spent</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#1001</td>
+                                    <td>john.doe@email.com</td>
+                                    <td>John Doe</td>
+                                    <td>2025-01-15</td>
+                                    <td>£45.67</td>
+                                    <td><span class="status-badge active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewUser(1001)">View</button>
+                                        <button class="btn btn-warning" onclick="suspendUser(1001)">Suspend</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1002</td>
+                                    <td>jane.smith@email.com</td>
+                                    <td>Jane Smith</td>
+                                    <td>2025-02-20</td>
+                                    <td>£123.45</td>
+                                    <td><span class="status-badge active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewUser(1002)">View</button>
+                                        <button class="btn btn-warning" onclick="suspendUser(1002)">Suspend</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1003</td>
+                                    <td>mike.wilson@email.com</td>
+                                    <td>Mike Wilson</td>
+                                    <td>2025-03-10</td>
+                                    <td>£89.12</td>
+                                    <td><span class="status-badge ended">Suspended</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewUser(1003)">View</button>
+                                        <button class="btn btn-success" onclick="activateUser(1003)">Activate</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Section -->
+            <div id="transactions" class="content-section">
+                <div class="page-header">
+                    <h1 class="page-title">Transactions</h1>
+                    <p class="page-subtitle">Monitor all financial transactions on the platform.</p>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Transactions</h2>
+                        <button class="btn btn-primary" onclick="exportTransactions()">
+                            📥 Export Data
+                        </button>
+                    </div>
+
+                    <div class="filter-bar">
+                        <select class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="entry">Entry Payment</option>
+                            <option value="refund">Refund</option>
+                            <option value="prize">Prize Payment</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                        <input type="text" class="search-input" placeholder="Search transactions...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>User</th>
+                                    <th>Raffle</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#TXN-001</td>
+                                    <td>john.doe@email.com</td>
+                                    <td>iPhone 15 Pro Max</td>
+                                    <td>£14.95</td>
+                                    <td>Entry Payment</td>
+                                    <td><span class="status-badge active">Completed</span></td>
+                                    <td>2025-07-03 14:30</td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewTransaction('TXN-001')">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#TXN-002</td>
+                                    <td>jane.smith@email.com</td>
+                                    <td>Tesla Model 3</td>
+                                    <td>£19.96</td>
+                                    <td>Entry Payment</td>
+                                    <td><span class="status-badge pending">Pending</span></td>
+                                    <td>2025-07-03 13:45</td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewTransaction('TXN-002')">View</button>
+                                        <button class="btn btn-warning" onclick="refundTransaction('TXN-002')">Refund</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#TXN-003</td>
+                                    <td>mike.wilson@email.com</td>
+                                    <td>Designer Handbag</td>
+                                    <td>£9.95</td>
+                                    <td>Refund</td>
+                                    <td><span class="status-badge active">Completed</span></td>
+                                    <td>2025-07-03 12:20</td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewTransaction('TXN-003')">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Winners Section -->
+            <div id="winners" class="content-section">
+                <div class="page-header">
+                    <h1 class="page-title">Winners Management</h1>
+                    <p class="page-subtitle">Manage raffle winners and prize distributions.</p>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Winners</h2>
+                        <button class="btn btn-primary" onclick="conductDraw()">
+                            🎲 Conduct New Draw
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Draw Date</th>
+                                    <th>Raffle</th>
+                                    <th>Winner</th>
+                                    <th>Prize Value</th>
+                                    <th>Total Entries</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2025-07-01</td>
+                                    <td>Tesla Model 3</td>
+                                    <td>sarah.jones@email.com</td>
+                                    <td>£35,000</td>
+                                    <td>2,567</td>
+                                    <td><span class="status-badge active">Prize Delivered</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewWinnerDetails(1)">View Details</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2025-06-28</td>
+                                    <td>MacBook Pro M3</td>
+                                    <td>alex.brown@email.com</td>
+                                    <td>£2,500</td>
+                                    <td>1,890</td>
+                                    <td><span class="status-badge pending">Pending Delivery</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewWinnerDetails(2)">View Details</button>
+                                        <button class="btn btn-success" onclick="markDelivered(2)">Mark Delivered</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2025-06-25</td>
+                                    <td>iPhone 15 Pro</td>
+                                    <td>emma.davis@email.com</td>
+                                    <td>£1,200</td>
+                                    <td>3,456</td>
+                                    <td><span class="status-badge active">Prize Delivered</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewWinnerDetails(3)">View Details</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics" class="content-section">
+                <div class="page-header">
+                    <h1 class="page-title">Analytics</h1>
+                    <p class="page-subtitle">Detailed insights and performance metrics.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">📊</div>
+                        <div class="stat-value">£127,450</div>
+                        <div class="stat-label">Total Revenue (All Time)</div>
+                        <div class="stat-change positive">↗ +15% from last quarter</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon success">🎯</div>
+                        <div class="stat-value">89.2%</div>
+                        <div class="stat-label">Completion Rate</div>
+                        <div class="stat-change positive">↗ +2.3% from last month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon info">👥</div>
+                        <div class="stat-value">3.4</div>
+                        <div class="stat-label">Avg. Entries per User</div>
+                        <div class="stat-change positive">↗ +0.8 from last month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning">🔄</div>
+                        <div class="stat-value">72%</div>
+                        <div class="stat-label">User Retention Rate</div>
+                        <div class="stat-change negative">↘ -3% from last month</div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Top Performing Raffles</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Raffle</th>
+                                    <th>Category</th>
+                                    <th>Total Entries</th>
+                                    <th>Revenue</th>
+                                    <th>Completion Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tesla Model 3</td>
+                                    <td>Cars</td>
+                                    <td>2,567</td>
+                                    <td>£12,835</td>
+                                    <td>98.5%</td>
+                                </tr>
+                                <tr>
+                                    <td>iPhone 15 Pro</td>
+                                    <td>Electronics</td>
+                                    <td>3,456</td>
+                                    <td>£10,368</td>
+                                    <td>95.2%</td>
+                                </tr>
+                                <tr>
+                                    <td>MacBook Pro M3</td>
+                                    <td>Electronics</td>
+                                    <td>1,890</td>
+                                    <td>£5,670</td>
+                                    <td>92.1%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="content-section">
+                <div class="page-header">
+                    <h1 class="page-title">Settings</h1>
+                    <p class="page-subtitle">Configure platform settings and preferences.</p>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">General Settings</h2>
+                    </div>
+                    <form class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Platform Name</label>
+                            <input type="text" class="form-control" value="Royal Raffles UK">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Email</label>
+                            <input type="email" class="form-control" value="admin@royalraffles.co.uk">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Default Ticket Price</label>
+                            <input type="number" class="form-control" value="2.99" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Maximum Entries per User</label>
+                            <input type="number" class="form-control" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Auto-draw Enabled</label>
+                            <select class="form-control">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Commission Rate (%)</label>
+                            <input type="number" class="form-control" value="10" step="0.1">
+                        </div>
+                    </form>
+                    <button class="btn btn-primary">Save Settings</button>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Payment Settings</h2>
+                    </div>
+                    <form class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">PayPal API Key</label>
+                            <input type="password" class="form-control" placeholder="••••••••••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stripe API Key</label>
+                            <input type="password" class="form-control" placeholder="••••••••••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Minimum Transaction</label>
+                            <input type="number" class="form-control" value="0.99" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Maximum Transaction</label>
+                            <input type="number" class="form-control" value="500.00" step="0.01">
+                        </div>
+                    </form>
+                    <button class="btn btn-primary">Update Payment Settings</button>
+                </div>
+            </div>
+
+            <!-- Support Section -->
+            <div id="support" class="content-section">
+                <div class="page-header">
+                    <h1 class="page-title">Support</h1>
+                    <p class="page-subtitle">Manage customer support tickets and inquiries.</p>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Support Tickets</h2>
+                        <button class="btn btn-primary" onclick="createSupportTicket()">
+                            ➕ Create Ticket
+                        </button>
+                    </div>
+
+                    <div class="filter-bar">
+                        <select class="filter-select">
+                            <option value="">All Priority</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="open">Open</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                        <input type="text" class="search-input" placeholder="Search tickets...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>User</th>
+                                    <th>Subject</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#SUP-001</td>
+                                    <td>john.doe@email.com</td>
+                                    <td>Payment Issue</td>
+                                    <td><span class="status-badge ended">High</span></td>
+                                    <td><span class="status-badge pending">Open</span></td>
+                                    <td>2025-07-03 10:30</td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewTicket('SUP-001')">View</button>
+                                        <button class="btn btn-success" onclick="resolveTicket('SUP-001')">Resolve</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#SUP-002</td>
+                                    <td>jane.smith@email.com</td>
+                                    <td>Winner Notification</td>
+                                    <td><span class="status-badge warning">Medium</span></td>
+                                    <td><span class="status-badge active">In Progress</span></td>
+                                    <td>2025-07-02 15:45</td>
+                                    <td>
+                                        <button class="btn btn-secondary" onclick="viewTicket('SUP-002')">View</button>
+                                        <button class="btn btn-success" onclick="resolveTicket('SUP-002')">Resolve</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Raffle Modal -->
+    <div id="createRaffleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Raffle</h3>
+                <button class="close-modal" onclick="hideModal('createRaffleModal')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Raffle Title</label>
+                    <input type="text" class="form-control" placeholder="Enter raffle title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-control">
+                        <option value="">Select Category</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="cars">Cars</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="home">Home & Garden</option>
+                    </select>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Ticket Price (£)</label>
+                        <input type="number" class="form-control" placeholder="2.99" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Max Entries</label>
+                        <input type="number" class="form-control" placeholder="5000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" rows="4" placeholder="Enter raffle description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <input type="datetime-local" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Raffle Image</label>
+                    <input type="file" class="form-control" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-primary">Create Raffle</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+        }
+
+        // Modal functionality
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Navigation event listeners
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.getAttribute('data-section');
+                showSection(section);
+            });
+        });
+
+        // Sample functions for admin actions
+        function editRaffle(id) {
+            alert(`Edit raffle #${id}`);
+        }
+
+        function deleteRaffle(id) {
+            if (confirm(`Are you sure you want to delete raffle #${id}?`)) {
+                alert(`Raffle #${id} deleted`);
+            }
+        }
+
+        function approveRaffle(id) {
+            alert(`Raffle #${id} approved`);
+        }
+
+        function drawWinner(id) {
+            alert(`Drawing winner for raffle #${id}`);
+        }
+
+        function viewWinner(id) {
+            alert(`Viewing winner for raffle #${id}`);
+        }
+
+        function viewUser(id) {
+            alert(`Viewing user #${id}`);
+        }
+
+        function suspendUser(id) {
+            if (confirm(`Are you sure you want to suspend user #${id}?`)) {
+                alert(`User #${id} suspended`);
+            }
+        }
+
+        function activateUser(id) {
+            alert(`User #${id} activated`);
+        }
+
+        function viewTransaction(id) {
+            alert(`Viewing transaction ${id}`);
+        }
+
+        function refundTransaction(id) {
+            if (confirm(`Are you sure you want to refund transaction ${id}?`)) {
+                alert(`Transaction ${id} refunded`);
+            }
+        }
+
+        function conductDraw() {
+            alert('Conducting new draw...');
+        }
+
+        function viewWinnerDetails(id) {
+            alert(`Viewing winner details #${id}`);
+        }
+
+        function markDelivered(id) {
+            alert(`Prize #${id} marked as delivered`);
+        }
+
+        function exportUsers() {
+            alert('Exporting users data...');
+        }
+
+        function exportTransactions() {
+            alert('Exporting transactions data...');
+        }
+
+        function createSupportTicket() {
+            alert('Creating new support ticket...');
+        }
+
+        function viewTicket(id) {
+            alert(`Viewing ticket ${id}`);
+        }
+
+        function resolveTicket(id) {
+            if (confirm(`Are you sure you want to resolve ticket ${id}?`)) {
+                alert(`Ticket ${id} resolved`);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('dashboard');
+        });
+    </script>
+</body>
+</html>
