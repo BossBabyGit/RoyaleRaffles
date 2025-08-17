@@ -46,6 +46,14 @@
         background-blend-mode: overlay;
     }
 
+    body.light-mode {
+        --dark-bg: #ffffff;
+        --darker-bg: #f5f5f5;
+        --card-bg: #f0f0f0;
+        --text-light: #1a1a2e;
+        --text-muted: #555555;
+    }
+
 
     .container {
         max-width: 1400px;
@@ -141,6 +149,23 @@
         margin: 3px 0;
         transition: 0.3s;
         border-radius: 2px;
+    }
+
+    .theme-toggle {
+        background: none;
+        border: 2px solid var(--claret);
+        color: var(--text-muted);
+        padding: 0.4rem 0.8rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        margin-left: 1rem;
+    }
+
+    .theme-toggle:hover {
+        color: var(--text-light);
+        border-color: var(--text-light);
     }
 
     /* Main Content */
@@ -1308,6 +1333,7 @@
                 <a class="cta-button">Login</a>
             </li>
         </ul>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle light mode">🌙</button>
         <div class="mobile-menu" id="mobileMenu">
             <span></span>
             <span></span>
@@ -1883,5 +1909,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
     </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.getElementById('themeToggle');
+    const setTheme = (theme) => {
+        if (theme === 'light') {
+            document.body.classList.add('light-mode');
+            themeToggle.textContent = '🌞';
+        } else {
+            document.body.classList.remove('light-mode');
+            themeToggle.textContent = '🌙';
+        }
+    };
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+    themeToggle.addEventListener('click', () => {
+        const newTheme = document.body.classList.contains('light-mode') ? 'dark' : 'light';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+});
+</script>
 </body>
 </html>
