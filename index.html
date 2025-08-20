@@ -1907,6 +1907,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const username = localStorage.getItem('rr_username');
     if (loginLink && username) {
         loginLink.textContent = 'Profile';
+
         loginLink.href = '#';
         loginLink.addEventListener('click', function(e) {
             e.preventDefault();
@@ -1939,6 +1940,9 @@ document.addEventListener('DOMContentLoaded', function() {
             showPage('dashboard');
             localStorage.removeItem('rr_show_dashboard');
         }
+
+        loginLink.href = 'profile.html';
+
     }
 });
 
