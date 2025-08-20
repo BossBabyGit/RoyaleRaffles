@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Profile - Royal Raffles UK</title>
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .profile-container {
+            background: #1e1e1e;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            width: 320px;
+            text-align: center;
+        }
+        .profile-container h1 {
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #7f1734, #0055a5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .profile-container button {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #addFunds {
+            background: #7f1734;
+            color: #fff;
+        }
+        #addFunds:hover {
+            background: #0055a5;
+        }
+        #logout {
+            background: #333;
+            color: #fff;
+        }
+        #logout:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1>Welcome, <span id="username"></span></h1>
+        <p>Credits: £<span id="credits">0</span></p>
+        <button id="addFunds">Add Funds via PayPal (Simulated)</button>
+        <button id="logout">Logout</button>
+    </div>
+    <script>
+        function loadProfile() {
+            const username = localStorage.getItem('rr_username');
+            if (!username) {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('username').textContent = username;
+            const credits = localStorage.getItem('rr_credits') || '0';
+            document.getElementById('credits').textContent = credits;
+        }
+        document.getElementById('addFunds').addEventListener('click', function() {
+            const amount = prompt('Enter amount to add (simulated PayPal):');
+            const value = parseFloat(amount);
+            if (isNaN(value) || value <= 0) {
+                alert('Invalid amount');
+                return;
+            }
+            let credits = parseFloat(localStorage.getItem('rr_credits') || '0');
+            credits += value;
+            localStorage.setItem('rr_credits', credits.toFixed(2));
+            document.getElementById('credits').textContent = credits.toFixed(2);
+        });
+        document.getElementById('logout').addEventListener('click', function() {
+            localStorage.removeItem('rr_username');
+            localStorage.removeItem('rr_credits');
+            window.location.href = 'index.html';
+        });
+        loadProfile();
+    </script>
+</body>
+</html>
