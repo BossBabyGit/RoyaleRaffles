@@ -895,58 +895,30 @@
         text-decoration: underline;
     }
 
-    /* Draw Animation Modal */
-    .draw-animation {
+    /* Entry Success Modal */
+    .success-message {
         text-align: center;
         padding: 2rem;
     }
 
-    .draw-animation h2 {
+    .checkmark {
+        font-size: 4rem;
+        color: #28a745;
+        margin-bottom: 1rem;
+    }
+
+    .success-message h2 {
         font-family: 'Kanit', sans-serif;
         font-size: 2rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         background: linear-gradient(90deg, var(--claret), var(--blue));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
-    .spinner {
-        width: 100px;
-        height: 100px;
-        border: 8px solid rgba(127, 23, 52, 0.2);
-        border-top: 8px solid var(--claret);
-        border-radius: 50%;
-        animation: spin 1.5s linear infinite;
-        margin: 0 auto 2rem;
-        position: relative;
-    }
-
-    .spinner::after {
-        content: '';
-        position: absolute;
-        top: -8px;
-        left: -8px;
-        right: -8px;
-        bottom: -8px;
-        border: 8px solid transparent;
-        border-top: 8px solid var(--blue);
-        border-radius: 50%;
-        animation: spin 2s linear infinite;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .draw-animation p {
+    .success-message p {
         color: var(--text-muted);
         font-size: 1.1rem;
-        margin-bottom: 2rem;
-    }
-
-    #drawResult {
-        display: none;
     }
 
     .winner-announcement {
@@ -1610,20 +1582,13 @@
         </div>
     </div>
 
-    <!-- Draw Animation Modal -->
+    <!-- Entry Success Modal -->
     <div id="drawModal" class="modal">
         <div class="modal-content">
-            <div class="draw-animation">
-                <h2>🎊 Live Draw in Progress! 🎊</h2>
-                <div class="spinner"></div>
-                <p>Drawing the winner...</p>
-                <div id="drawResult" style="display: none;">
-                    <div class="winner-announcement">
-                        <h3>🎉 Congratulations! 🎉</h3>
-                        <p id="winnerName"></p>
-                        <p>You've won the <span id="winnerPrize"></span>!</p>
-                    </div>
-                </div>
+            <div class="success-message">
+                <div class="checkmark">✓</div>
+                <h2>Entry Successful!</h2>
+                <p>You have entered the raffle.</p>
             </div>
         </div>
     </div>
@@ -1843,10 +1808,13 @@ function processEntry() {
         return;
     }
     
-    // Close modal and start draw simulation
+    // Close entry modal and show success message
     closeModal();
-    document.getElementById('drawModal').style.display = 'flex';
-    // ... rest of the function ...
+    const successModal = document.getElementById('drawModal');
+    successModal.style.display = 'flex';
+    setTimeout(() => {
+        successModal.style.display = 'none';
+    }, 2000);
 }
 
 // Add payment method selection
