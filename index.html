@@ -1302,7 +1302,7 @@
             <li><a href="#" class="nav-link" data-page="dashboard">Dashboard</a></li>
             <li><a href="#" class="nav-link" data-page="faq">FAQ</a></li>
             <li>
-                <a class="cta-button">Login</a>
+                <a id="loginLink" class="cta-button" href="login.html">Login</a>
             </li>
         </ul>
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle light mode">🌙</button>
@@ -1445,9 +1445,16 @@
 
 
             <!-- User Dashboard -->
-            <div id="dashboard" class="page">
+           <div id="dashboard" class="page">
                 <h1 style="color: white; text-align: center; margin-bottom: 2rem;">Your Dashboard</h1>
-                
+
+                <div class="dashboard-section">
+                    <h2>Welcome, <span id="profileUsername"></span></h2>
+                    <p>Credits: £<span id="profileCredits">0</span></p>
+                    <button id="addFunds" class="cta-button">Add Funds via PayPal (Simulated)</button>
+                    <button id="logout" class="cta-button secondary" style="margin-left: 1rem;">Logout</button>
+                </div>
+
                 <div class="dashboard-section">
                     <h2>Active Entries</h2>
                     <div class="entries-list">
@@ -1896,7 +1903,56 @@ document.addEventListener('DOMContentLoaded', function() {
         setTheme(newTheme);
         localStorage.setItem('theme', newTheme);
     });
+    const loginLink = document.getElementById('loginLink');
+    const username = localStorage.getItem('rr_username');
+    if (loginLink && username) {
+        loginLink.textContent = 'Profile';
+        loginLink.href = '#';
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showPage('dashboard');
+        });
+
+        updateProfileInfo();
+
+        document.getElementById('addFunds').addEventListener('click', function() {
+            const amount = prompt('Enter amount to add (simulated PayPal):');
+            const value = parseFloat(amount);
+            if (isNaN(value) || value <= 0) {
+                alert('Invalid amount');
+                return;
+            }
+            let credits = parseFloat(localStorage.getItem('rr_credits') || '0');
+            credits += value;
+            localStorage.setItem('rr_credits', credits.toFixed(2));
+            updateProfileInfo();
+        });
+
+        document.getElementById('logout').addEventListener('click', function() {
+            localStorage.removeItem('rr_username');
+            localStorage.removeItem('rr_credits');
+            localStorage.removeItem('rr_show_dashboard');
+            window.location.href = 'index.html';
+        });
+
+        if (localStorage.getItem('rr_show_dashboard')) {
+            showPage('dashboard');
+            localStorage.removeItem('rr_show_dashboard');
+        }
+    }
 });
+
+function updateProfileInfo() {
+    const nameEl = document.getElementById('profileUsername');
+    const creditEl = document.getElementById('profileCredits');
+    if (nameEl) {
+        nameEl.textContent = localStorage.getItem('rr_username') || '';
+    }
+    if (creditEl) {
+        const credits = parseFloat(localStorage.getItem('rr_credits') || '0');
+        creditEl.textContent = credits.toFixed(2);
+    }
+}
 </script>
 </body>
 </html>
